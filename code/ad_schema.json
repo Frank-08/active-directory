@@ -3,17 +3,24 @@
     
     "groups":[
         {
-            "name": "Engineering"
+            "name": "Employees"
         }
     ],
 
     "users": [
 
         {
-            "name": "Jacob Westley",
-            "password": "P@ssw0rd123!",
+            "name": "Alice Lice",
+            "password": "P@ssw0rd456",
             "groups": [
-                "Engineering"
+                "Employees"
+            ]
+        }
+        {
+            "name": "Bob OB",
+            "password": "P@ssw0rd789",
+            "groups": [
+                "Employees"
             ]
         }
     ]
