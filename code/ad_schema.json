@@ -1,0 +1,20 @@
+{
+    "domain": "319b.local",
+    
+    "groups":[
+        {
+            "name": "Engineering"
+        }
+    ],
+
+    "users": [
+
+        {
+            "name": "Jacob Westley",
+            "password": "P@ssw0rd123!",
+            "groups": [
+                "Engineering"
+            ]
+        }
+    ]
+}
