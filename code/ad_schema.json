@@ -15,7 +15,8 @@
             "groups": [
                 "Employees"
             ]
-        }
+        },
+        
         {
             "name": "Bob OB",
             "password": "P@ssw0rd789",
