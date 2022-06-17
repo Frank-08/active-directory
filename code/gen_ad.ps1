@@ -4,7 +4,13 @@ function CreateADGroup () {
     param( [Parameter(Mandatory=$true)] $groupObject )
 
     $group_name = $groupObject.name
-    New-ADGroup -name $group_name -GroupScope Global
+    try {
+        New-ADGroup -name $group_name -GroupScope Global
+    }
+    catch {
+        [Microsoft.ActiveDirectory.Management.Commands.NewADGroup]
+    }
+    Write-Output "Group $group_name already exists!"
 }
 function CreateADUser() {
     param( [Parameter(Mandatory=$true)] $userObject )
@@ -14,7 +20,6 @@ function CreateADUser() {
     $password = $userObject.password
     $domain = "319b.local"
     #$group_name = $userObject.groups
-    
     
     #create FirstInitial lastname
     $firstname, $lastname = $name.Split(" ")
@@ -37,7 +42,6 @@ function CreateADUser() {
         {
             Write-Output "No AD Group by that name!"
         }
-        
     }
     #Write-Output $userObject
 }
