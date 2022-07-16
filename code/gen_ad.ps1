@@ -76,7 +76,7 @@ $json  = (Get-Content $JSONFile | ConvertFrom-Json )
 
 $Global:Domain = $json.domain
 
-Set-ADDefaultDomainPasswordPolicy -ComplexityEnabled $false -MinPasswordLength 0 -Identity $Global:Domain
+Set-ADDefaultDomainPasswordPolicy -ComplexityEnabled $false -MinPasswordLength 1 -Identity $Global:Domain
 
 foreach ($group in $json.groups) {
     CreateADGroup $group
