@@ -1,4 +1,7 @@
-param([Parameter(Mandatory=$true)] $JSONFile)
+param(
+    [Parameter(Mandatory=$true)] $JSONFile,
+[switch]$undo
+)
 
 function CreateADGroup () {
     param( [Parameter(Mandatory=$true)] $groupObject )
@@ -57,7 +60,18 @@ function CreateADUser() {
 
 function RemoveADUser() {
     param( [Parameter(Mandatory=$true)] $userObject )
-    Remove-ADUser -Identity $userObject.name -Confirm:$false
+
+    #Pull info from JSON
+    $name = $userObject.name
+    #$group_name = $userObject.groups
+    
+    #create FirstInitial lastname
+    $firstname, $lastname = $name.Split(" ")
+    $username = ($firstname[0] + $lastname).tolower()
+    # $samAccountName = $username
+    # $principalname = $username
+
+    Remove-ADUser -Identity $username -Confirm:$false
 
 }
 
@@ -70,12 +84,13 @@ function WeekenPasswordPolicy(){
 }
 
 
-
+#MAIN
 
 $json  = (Get-Content $JSONFile | ConvertFrom-Json )
 
 $Global:Domain = $json.domain
 
+if ( -not $undo) {
 Set-ADDefaultDomainPasswordPolicy -ComplexityEnabled $false -MinPasswordLength 1 -Identity $Global:Domain
 
 foreach ($group in $json.groups) {
@@ -85,4 +100,17 @@ foreach ($group in $json.groups) {
 foreach ($user in $json.users) {
     CreateADUser $user
 }
-#echo $json.users
+
+}else {
+    Set-ADDefaultDomainPasswordPolicy -ComplexityEnabled $true -MinPasswordLength 7 -Identity $Global:Domain
+    
+    foreach ($user in $json.users) {
+        RemoveADUser $user
+    }
+    
+    foreach ($group in $json.groups) {
+        RemoveADGroup $group
+    }
+}
+
+
