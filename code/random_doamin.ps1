@@ -1,5 +1,5 @@
 param(
-    [Parameter(Mandatory=$true)] $JSONFile,
+    [Parameter(Mandatory=$true)] $JSONOut,
 [int]$UserCount,
 [int]$GroupCount,
 [int]$LocalAdminCount
@@ -26,16 +26,14 @@ if ($GroupCount -eq 0 ){
 if ($LocalAdminCount -ne 0){
     $local_admin_indexes = @()
     while(($local_admin_indexes | Measure-Object ).Count -lt $LocalAdminCount){
-        $random_index = (Get-Random -InputObject (0..($UserCount-1)) | Where-Object { $local_admin_indexes -notcontains $_ })
+        $random_index = (Get-Random -InputObject (1..($UserCount)) | Where-Object { $local_admin_indexes -notcontains $_ })
         $local_admin_indexes += @( $random_index )
     }
 }
 
-echo $local_admin_indexes
-exit
 
 #GROUPS
-    for ( $i =0; $i -lt $GroupCount; $i++ ){
+    for ( $i =1; $i -le $GroupCount; $i++ ){
     $new_group = (Get-Random -InputObject $group_names)
     $group = @{ "name" = "$new_group"}
     $groups += $group
@@ -44,7 +42,7 @@ exit
 
 #Users
 
-    for ( $i =0; $i -lt $UserCount; $i++ ){
+    for ( $i =1; $i -le $UserCount; $i++ ){
     $first_name = (Get-Random -InputObject $first_names)
     $last_name = (Get-Random -InputObject $last_names)
     $password = (Get-Random -InputObject $passwords)
@@ -53,6 +51,12 @@ exit
         "password" = "$password"
         "groups" = @((Get-Random -InputObject $groups).name)
     }
+
+    if ($local_admin_indexes | where { $_ -eq $i} ){
+        echo "user $i is local Admin"
+        $new_user["local_admin"] = $true
+    }
+
     $users += $new_user
 
   #Remove used values

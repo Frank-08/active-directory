@@ -54,6 +54,10 @@ function CreateADUser() {
             Write-Output "No AD Group by that name!"
         }
     }
+
+    if ($userObject.local_admin){
+        net localgroup administrators $domain\$username /add
+    }
     #Write-Output $userObject
 }
 
