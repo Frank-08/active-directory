@@ -54,13 +54,14 @@ function CreateADUser() {
             Write-Output "No AD Group by that name!"
         }
     }
-
-    if ($userObject.local_admin){
-        net localgroup administrators $domain\$username /add
+# add local admins
+    # if ($userObject.local_admin){
+    #     net localgroup administrators $domain\$username /add
+    # }
+    foreach ($hostname in $userObject.local_admin){
+        Invoke-Command -Computer $hostname -ScriptBlock {net localgroup administrators $domain\$username /add}
     }
-    #Write-Output $userObject
 }
-
 
 function RemoveADUser() {
     param( [Parameter(Mandatory=$true)] $userObject )
